@@ -45,13 +45,15 @@ class LinkedList
 
     append(value)
     {
+        let futureNode = new Node(value);
         if(this.head() === null)
         {
-            this.initial = new Node(value);
+            this.initial = futureNode;
         } else {
-            this.tail().updateNext(new Node(value));
-
+            this.tail().updateNext(futureNode);
         }
+
+        return futureNode;
 
     }
 
@@ -65,6 +67,8 @@ class LinkedList
             this.initial = new Node(value);
             this.initial.updateNext(oldInitial);
         }
+
+        return this.initial;
 
     }
 
@@ -94,10 +98,14 @@ class LinkedList
     {
         if(this.size() > 1)
         {
+            let oldNode = this.at(this.size() - 1);
             this.at(this.size() - 2).updateNext(null);
+            return oldNode;
         } else if(this.size() > 0)
         {
+            let oldInitial = this.initial;
             this.initial = null;
+            return oldInitial;
         }
     }
 
@@ -156,5 +164,42 @@ class LinkedList
         }
 
         return "empty";
+    }
+
+    insertAt(value, index)
+    {
+        if(index >= this.size())
+        {
+            return this.append(value);
+        } else {
+            let previous = this.at(index - 1);
+            let next = previous.next;
+            let futureNode = new Node(value);
+            previous.updateNext(futureNode);
+            if(next !== null)
+            {
+                futureNode.updateNext(next);
+            }
+            return futureNode;
+        }
+    }
+
+    removeAt(index)
+    {
+        if(index >= this.size())
+        {
+            return this.pop();
+        } else {
+            let previous = this.at(index - 1);
+            let current = this.at(index);
+            let next = current.next;
+            if(next !== null)
+            {
+                previous.updateNext(next);
+            } else {
+                previous.updateNext(null);
+            }
+            return current;
+        }
     }
 }
